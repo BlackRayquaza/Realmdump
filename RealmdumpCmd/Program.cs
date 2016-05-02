@@ -18,12 +18,6 @@ namespace RealmdumpCmd
             Console.WriteLine($"Items: {XmlLibrary.ObjectLibrary.TypeToItem.Count}");
             Console.WriteLine($"Language Strings: {LanguageLibrary.Names.Count}");
 
-            foreach (var name in LanguageLibrary.Names)
-            {
-                //Console.WriteLine($"{name.Key} => {name.Value}");
-            }
-            Console.WriteLine(Program.LanguageLibrary.Names["equip.Common_Feline_Egg"]);
-
             Console.ReadLine();
 
             XmlLibrary.Dispose();

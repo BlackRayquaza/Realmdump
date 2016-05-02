@@ -11,24 +11,46 @@ namespace RealmdumpCmd.library.xml.api
         public string DisplayId { get; set; }
         public string Class { get; set; }
         public bool IsItem { get; set; }
-        public XElement Texture { get; set; }
+        public XElement Texture { get; set; } // TODO: class
         public byte SlotType { get; set; }
         public byte Tier { get; set; }
         public string Description { get; set; }
         public float RateOfFire { get; set; }
         public string Sound { get; set; }
-        public XElement Projectile { get; set; } // TODO
-        public string PetFamily { get; set; }
-        public string PetRarity { get; set; }
-        public string Activate { get; set; } // TODO
+        public XElement Projectile { get; set; } // TODO: class
+        public string PetFamily { get; set; } // TODO: enum?
+        public string PetRarity { get; set; } // TODO: enum?
+        public string Activate { get; set; } // TODO: array
         public bool Consumable { get; set; }
-        public byte BagType { get; set; }
+        public byte BagType { get; set; } // TODO: enum
         public byte FameBonus { get; set; }
         public byte NumProjectiles { get; set; }
         public float ArcGap { get; set; }
         public string OldSound { get; set; }
         public uint FeedPower { get; set; }
         public bool Soulbound { get; set; }
+        public byte MpCost { get; set; }
+        // TODO: ActivateOnEquip
+        // TODO: ConditionEffect
+        // TODO: Usable
+        // TODO: Potion
+        // TODO: Doses
+        // TODO: SuccessorId
+        // TODO: Cooldown
+        // TODO: Resurrects
+        // TODO: Track
+        // TODO: PetFormStone
+        // TODO: Timer
+        // TODO: XpBoost
+        // TODO: ExtraTooltipData
+        // TODO: MpEndCost
+        // TODO: MultiPhase
+        // TODO: LTBoosted
+        // TODO: LDBoosted
+        // TODO: Backpack
+        // TODO: Treasure
+        // TODO: setType
+        // TODO: setName
 
         public Item(XElement element, LanguageLibrary language)
         {
