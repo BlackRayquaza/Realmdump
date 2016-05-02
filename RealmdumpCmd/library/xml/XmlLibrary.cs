@@ -8,10 +8,10 @@ namespace RealmdumpCmd.library.xml
     {
         public ObjectLibrary ObjectLibrary { get; set; }
 
-        public XmlLibrary()
+        public XmlLibrary(LanguageLibrary language)
         {
             using (var stream = File.OpenRead("stuff/xml/equip.xml"))
-                ObjectLibrary = new ObjectLibrary(XElement.Load(stream));
+                ObjectLibrary = new ObjectLibrary(XElement.Load(stream), language);
         }
 
         public void Dispose()

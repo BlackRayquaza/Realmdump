@@ -12,12 +12,22 @@ namespace RealmdumpCmd
         // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)
         {
-            XmlLibrary = new XmlLibrary();
             LanguageLibrary = new LanguageLibrary(File.ReadAllText("stuff/json/strings.json"));
+            XmlLibrary = new XmlLibrary(LanguageLibrary);
 
             Console.WriteLine($"Items: {XmlLibrary.ObjectLibrary.TypeToItem.Count}");
             Console.WriteLine($"Language Strings: {LanguageLibrary.Names.Count}");
+
+            foreach (var name in LanguageLibrary.Names)
+            {
+                //Console.WriteLine($"{name.Key} => {name.Value}");
+            }
+            Console.WriteLine(Program.LanguageLibrary.Names["equip.Common_Feline_Egg"]);
+
             Console.ReadLine();
+
+            XmlLibrary.Dispose();
+            LanguageLibrary.Dispose();
         }
     }
 }

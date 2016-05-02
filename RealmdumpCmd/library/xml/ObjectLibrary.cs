@@ -12,7 +12,7 @@ namespace RealmdumpCmd.library.xml
         public Dictionary<ushort, XElement> TypeToElement { get; set; }
         public Dictionary<ushort, Item> TypeToItem { get; set; }
 
-        public ObjectLibrary(XElement objects)
+        public ObjectLibrary(XElement objects, LanguageLibrary language)
         {
             IdToType = new Dictionary<string, ushort>(StringComparer.OrdinalIgnoreCase);
             TypeToElement = new Dictionary<ushort, XElement>();
@@ -20,7 +20,7 @@ namespace RealmdumpCmd.library.xml
 
             foreach (var element in objects.XPathSelectElements("//Object"))
             {
-                var item = new Item(element);
+                var item = new Item(element, language);
                 IdToType.Add(item.ObjectId, item.ObjectType);
                 TypeToElement.Add(item.ObjectType, element);
                 TypeToItem.Add(item.ObjectType, item);

@@ -19,7 +19,7 @@
       <BagType>3</BagType>
       <feedPower>50</feedPower>
       <DisplayId>{equip.Common_Feline_Egg}</DisplayId>
-   </Object>
+     </Object>
    <Object type="0xc86" id="Uncommon Feline Egg">
       <Class>Equipment</Class>
       <Item/>
