@@ -6,8 +6,8 @@ namespace RealmdumpCmd
 {
     internal class Program
     {
-        public static XmlLibrary XmlLibrary { get; set; }
-        public static LanguageLibrary LanguageLibrary { get; set; }
+        private static XmlLibrary XmlLibrary { get; set; }
+        private static LanguageLibrary LanguageLibrary { get; set; }
 
         // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)
@@ -16,6 +16,7 @@ namespace RealmdumpCmd
             XmlLibrary = new XmlLibrary(LanguageLibrary);
 
             Console.WriteLine($"Items: {XmlLibrary.ObjectLibrary.TypeToItem.Count}");
+            Console.WriteLine($"Players: {XmlLibrary.ClassLibrary.TypeToPlayer.Count}");
             Console.WriteLine($"Language Strings: {LanguageLibrary.Names.Count}");
 
             Console.ReadLine();

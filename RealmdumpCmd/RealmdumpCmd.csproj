@@ -47,12 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="library\xml\api\BasicObject.cs" />
+    <Compile Include="library\xml\api\Player.cs" />
+    <Compile Include="library\xml\ClassLibrary.cs" />
     <Compile Include="library\xml\api\Item.cs" />
     <Compile Include="library\json\LanguageLibrary.cs" />
     <Compile Include="library\xml\ObjectLibrary.cs" />
     <Compile Include="library\xml\XmlLibrary.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="util\EnumerableUtil.cs" />
     <Compile Include="util\StringUtil.cs" />
     <Compile Include="util\XmlUtil.cs" />
   </ItemGroup>
@@ -63,7 +67,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="stuff\xml\players.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <None Include="stuff\xml\equip.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -4,11 +4,8 @@ using System.Xml.Linq;
 
 namespace RealmdumpCmd.library.xml.api
 {
-    public class Item
+    public class Item : BasicObject
     {
-        public ushort ObjectType { get; set; }
-        public string ObjectId { get; set; }
-        public string DisplayId { get; set; }
         public string Class { get; set; }
         public bool IsItem { get; set; }
         public XElement Texture { get; set; } // TODO: class
@@ -52,31 +49,28 @@ namespace RealmdumpCmd.library.xml.api
         // TODO: setType
         // TODO: setName
 
-        public Item(XElement element, LanguageLibrary language)
+        public Item(XElement element, LanguageLibrary language) : base(element, language)
         {
-            ObjectType = (ushort)StringUtil.FromString(element.Attribute("type").Value);
-            ObjectId = element.Attribute("id").Value;
-            DisplayId = language.Names[element.Element("DisplayId").Value.Trim('{', '}')];
             Class = element.Element("Class").Value;
-            IsItem = element.HasOwnProperty("Item");
+            IsItem = element.HasElement("Item");
             Texture = element.Element("Texture");
             SlotType = byte.Parse(element.Element("SlotType").Value);
-            Tier = element.HasOwnProperty("Tier") ? byte.Parse(element.Element("Tier").Value) : byte.MinValue;
+            Tier = element.HasElement("Tier") ? byte.Parse(element.Element("Tier").Value) : byte.MinValue;
             Description = language.Names[element.Element("Description").Value.Trim('{', '}')];
-            RateOfFire = element.HasOwnProperty("RateOfFire") ? float.Parse(element.Element("RateOfFire").Value) : 0;
-            Sound = element.HasOwnProperty("Sound") ? element.Element("Sound").Value : string.Empty;
-            Projectile = element.HasOwnProperty("Projectile") ? element.Element("Projectile") : null;
-            PetFamily = element.HasOwnProperty("PetFamily") ? element.Element("PetFamily").Value : string.Empty;
-            PetRarity = element.HasOwnProperty("Rarity") ? element.Element("Rarity").Value : string.Empty;
-            Activate = element.HasOwnProperty("Activate") ? element.Element("Activate").Value : string.Empty;
-            Consumable = element.HasOwnProperty("Consumable");
-            BagType = element.HasOwnProperty("BagType") ? byte.Parse(element.Element("BagType").Value) : byte.MinValue;
-            FameBonus = element.HasOwnProperty("FameBonus") ? byte.Parse(element.Element("FameBonus").Value) : byte.MinValue;
-            NumProjectiles = element.HasOwnProperty("NumProjectiles") ? byte.Parse(element.Element("NumProjectiles").Value) : (byte)1;
-            ArcGap = element.HasOwnProperty("ArcGap") ? float.Parse(element.Element("ArcGap").Value) : 11.25f;
-            OldSound = element.HasOwnProperty("OldSound") ? element.Element("OldSound").Value : String.Empty;
-            FeedPower = element.HasOwnProperty("feedPower") ? uint.Parse(element.Element("feedPower").Value) : 0;
-            Soulbound = element.HasOwnProperty("Soulbound");
+            RateOfFire = element.HasElement("RateOfFire") ? float.Parse(element.Element("RateOfFire").Value) : 0;
+            Sound = element.HasElement("Sound") ? element.Element("Sound").Value : string.Empty;
+            Projectile = element.HasElement("Projectile") ? element.Element("Projectile") : null;
+            PetFamily = element.HasElement("PetFamily") ? element.Element("PetFamily").Value : string.Empty;
+            PetRarity = element.HasElement("Rarity") ? element.Element("Rarity").Value : string.Empty;
+            Activate = element.HasElement("Activate") ? element.Element("Activate").Value : string.Empty;
+            Consumable = element.HasElement("Consumable");
+            BagType = element.HasElement("BagType") ? byte.Parse(element.Element("BagType").Value) : byte.MinValue;
+            FameBonus = element.HasElement("FameBonus") ? byte.Parse(element.Element("FameBonus").Value) : byte.MinValue;
+            NumProjectiles = element.HasElement("NumProjectiles") ? byte.Parse(element.Element("NumProjectiles").Value) : (byte)1;
+            ArcGap = element.HasElement("ArcGap") ? float.Parse(element.Element("ArcGap").Value) : 11.25f;
+            OldSound = element.HasElement("OldSound") ? element.Element("OldSound").Value : String.Empty;
+            FeedPower = element.HasElement("feedPower") ? uint.Parse(element.Element("feedPower").Value) : 0;
+            Soulbound = element.HasElement("Soulbound");
         }
     }
 }
