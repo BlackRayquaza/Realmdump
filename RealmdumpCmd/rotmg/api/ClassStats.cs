@@ -11,9 +11,9 @@ namespace RealmdumpCmd.rotmg.api
 
         public ClassStats(XElement elem)
         {
-            ObjectType = StringUtil.FromString(elem.Attribute("objectType").Value);
-            BestLevel = int.Parse(elem.Element("BestLevel").Value);
-            BestFame = int.Parse(elem.Element("BestFame").Value);
+            ObjectType = elem.Value<int>("@objectType");
+            BestLevel = elem.Value<int>("BestLevel");
+            BestFame = elem.Value<int>("BestFame");
         }
     }
 }

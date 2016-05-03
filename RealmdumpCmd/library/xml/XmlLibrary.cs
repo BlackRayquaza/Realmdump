@@ -11,9 +11,9 @@ namespace RealmdumpCmd.library.xml
 
         public XmlLibrary(LanguageLibrary language)
         {
-            using (var stream = File.OpenRead("stuff/xml/equip.xml"))
+            using (var stream = File.OpenRead("resources/xml/equip.xml"))
                 ObjectLibrary = new ObjectLibrary(XElement.Load(stream), language);
-            using (var stream = File.OpenRead("stuff/xml/players.xml"))
+            using (var stream = File.OpenRead("resources/xml/players.xml"))
                 ClassLibrary = new ClassLibrary(XElement.Load(stream), language);
         }
 

@@ -12,7 +12,7 @@ namespace RealmdumpCmd.rotmg.api
         public int FortuneTokens { get; set; }
         public int NextCharSlotPrice { get; set; }
         public string AccountId { get; set; } // Too big for int
-        public XElement Vault { get; set; }
+        public Vault Vault { get; set; }
         public List<int> Gifts { get; set; }
         public string Originating { get; set; }
         public byte CleanPasswordStatus { get; set; }
@@ -26,7 +26,7 @@ namespace RealmdumpCmd.rotmg.api
         public byte PetyardType { get; set; }
         public byte ArenaTickets { get; set; } // what is this
         public Stats Stats { get; set; }
-        public XElement Guild { get; set; }
+        public Guild Guild { get; set; }
 
         public Account(XContainer elem)
         {
@@ -38,11 +38,10 @@ namespace RealmdumpCmd.rotmg.api
             FortuneTokens = acc.Value<int>("FortuneToken");
             NextCharSlotPrice = acc.Value<int>("NextCharSlotPrice");
             AccountId = acc.Value<string>("AccountId");
-            Vault = acc.Element("Vault");
+            Vault = new Vault(acc.Element("Vault"));
             Gifts = !acc.Element("Gifts").IsEmpty
-                ? acc.Element("Gifts").Value.Split(',').Select(_ => StringUtil.FromString(_.Trim())).ToList()
+                ? acc.Element("Gifts").Value.Split(',').Select(StringUtil.FromString).ToList()
                 : new List<int>();
-            //Gifts = !acc.Element("Gifts").IsEmpty ? acc.Element("Gifts").Value.ToEnumerable<int>().ToList() : new List<int>();
             Originating = acc.Value<string>("Originating");
             CleanPasswordStatus = acc.Value<byte>("cleanPasswordStatus");
             Name = acc.Value<string>("Name");
@@ -55,7 +54,8 @@ namespace RealmdumpCmd.rotmg.api
             PetyardType = acc.Value<byte>("PetyardType");
             ArenaTickets = acc.Value<byte>("ArenaTickets");
             Stats = new Stats(acc.Element("Stats"));
-            Guild = acc.Element("Guild");
+            if (!acc.HasElement("Guild")) return;
+            Guild = new Guild(acc.Element("Guild"));
         }
     }
 }

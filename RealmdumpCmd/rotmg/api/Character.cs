@@ -1,26 +1,70 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
+using RealmdumpCmd.util;
 
 namespace RealmdumpCmd.rotmg.api
 {
     public class Character
     {
-        public int ObjectType { get; set; }
-        public int Level { get; set; }
+        public int Id { get; set; }
+        public ushort ObjectType { get; set; }
+        public byte Level { get; set; }
         public int Experience { get; set; }
-        public int CurrentFame { get; set; }
+        public int Fame { get; set; }
+        public List<int> Equipment { get; set; } 
+        public ushort MaxHitPoints { get; set; }
+        public ushort HitPoints { get; set; }
+        public ushort MaxMagicPoints { get; set; }
+        public ushort MagicPoints { get; set; }
+        public byte Attack { get; set; }
+        public byte Defense { get; set; }
+        public byte Speed { get; set; }
+        public byte Dexterity { get; set; }
+        public byte HpRegen { get; set; }
+        public byte MpRegen { get; set; }
+        public string PCStats { get; set; }
+        public byte HealthStackCount { get; set; }
+        public byte MagicStackCount { get; set; }
+        public XElement Pet { get; set; }
         public int Tex1 { get; set; }
         public int Tex2 { get; set; }
         public int Texture { get; set; }
+        public bool XpBoosted { get; set; }
+        public int XpTimer { get; set; }
+        public int LDTimer { get; set; }
+        public int LTTimer { get; set; }
+        public bool HasBackpack { get; set; }
 
-        public Character(XContainer elem)
+        public Character(XElement elem)
         {
-            ObjectType = int.Parse(elem.Element("ObjectType").Value);
-            Level = int.Parse(elem.Element("Level").Value);
-            Experience = int.Parse(elem.Element("Exp").Value);
-            CurrentFame = int.Parse(elem.Element("CurrentFame").Value);
-            Tex1 = elem.Element("Tex1") != null ? int.Parse(elem.Element("Tex1").Value) : 0;
-            Tex2 = elem.Element("Tex2") != null ? int.Parse(elem.Element("Tex2").Value) : 0;
-            Texture = elem.Element("Texture") != null ? int.Parse(elem.Element("Texture").Value) : 0;
+            Id = elem.Value<int>("@id");
+            ObjectType = elem.Value<ushort>("ObjectType");
+            Level = elem.Value<byte>("Level");
+            Experience = elem.Value<int>("Exp");
+            Fame = elem.Value<int>("CurrentFame");
+            Equipment = elem.Element("Equipment").Value.Split(',').Select(StringUtil.FromString).ToList();
+            MaxHitPoints = elem.Value<ushort>("MaxHitPoints");
+            HitPoints = elem.Value<ushort>("HitPoints");
+            MagicPoints = elem.Value<ushort>("MagicPoints");
+            Attack = elem.Value<byte>("Attack");
+            Defense = elem.Value<byte>("Defense");
+            Speed = elem.Value<byte>("Speed");
+            Dexterity = elem.Value<byte>("Dexterity");
+            HpRegen = elem.Value<byte>("HpRegen");
+            MpRegen = elem.Value<byte>("MpRegen");
+            PCStats = elem.Value<string>("PCStats");
+            HealthStackCount = elem.Value<byte>("HealthStackCount");
+            MagicStackCount = elem.Value<byte>("MagicStackCount");
+            Pet = elem.Element("Pet");
+            Tex1 = elem.HasElement("Tex1") ? elem.Value<int>("Tex1") : 0;
+            Tex2 = elem.HasElement("Tex2") ? elem.Value<int>("Tex2") : 0;
+            Texture = elem.HasElement("Texture") ? elem.Value<int>("Texture") : 0;
+            XpBoosted = elem.Value<int>("XpBoosted") == 1;
+            XpTimer = elem.Value<int>("XpTimer");
+            LDTimer = elem.Value<int>("LDTimer");
+            LTTimer = elem.Value<int>("LTTimer");
+            HasBackpack = elem.Value<int>("HasBackpack") == 1;
         }
     }
 }

@@ -48,6 +48,7 @@
     <Compile Include="rotmg\api\Account.cs" />
     <Compile Include="rotmg\api\Character.cs" />
     <Compile Include="rotmg\api\ClassStats.cs" />
+    <Compile Include="rotmg\api\Guild.cs" />
     <Compile Include="rotmg\api\Stats.cs" />
     <Compile Include="library\xml\api\BasicObject.cs" />
     <Compile Include="library\xml\api\Player.cs" />
@@ -58,9 +59,10 @@
     <Compile Include="library\xml\XmlLibrary.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="stuff\json\account.json">
+    <None Include="resources\json\account.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="rotmg\api\Vault.cs" />
     <Compile Include="util\EnumerableUtil.cs" />
     <Compile Include="util\FameUtil.cs" />
     <Compile Include="util\StringUtil.cs" />
@@ -69,17 +71,17 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="stuff\json\strings.json">
+    <None Include="resources\json\strings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="stuff\xml\players.xml">
+    <None Include="resources\xml\players.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="stuff\xml\equip.xml">
+    <None Include="resources\xml\equip.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
