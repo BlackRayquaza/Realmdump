@@ -25,63 +25,56 @@ namespace RealmdumpCmd
         // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)
         {
-            try
+            LanguageLibrary = new LanguageLibrary(File.ReadAllText("stuff/json/strings.json"));
+            XmlLibrary = new XmlLibrary(LanguageLibrary);
+
+            Console.WriteLine($"Items: {XmlLibrary.ObjectLibrary.TypeToItem.Count}");
+            Console.WriteLine($"Players: {XmlLibrary.ClassLibrary.TypeToPlayer.Count}");
+            Console.WriteLine($"Language Strings: {LanguageLibrary.Names.Count}");
+
+            if (!File.Exists("stuff/json/accounts.json"))
             {
-                LanguageLibrary = new LanguageLibrary(File.ReadAllText("stuff/json/strings.json"));
-                XmlLibrary = new XmlLibrary(LanguageLibrary);
+                Console.WriteLine("Cant find accounts file.");
+                Console.ReadLine();
+                return;
+            }
 
-                Console.WriteLine($"Items: {XmlLibrary.ObjectLibrary.TypeToItem.Count}");
-                Console.WriteLine($"Players: {XmlLibrary.ClassLibrary.TypeToPlayer.Count}");
-                Console.WriteLine($"Language Strings: {LanguageLibrary.Names.Count}");
+            AccountsToLoad =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(
+                    File.ReadAllText("stuff/json/accounts.json"));
+            Accounts = new List<Account>();
+            WebClient = new WebClient();
 
-                if (!File.Exists("stuff/json/accounts.json"))
+            var count = AccountsToLoad.Count;
+
+            foreach (var account in AccountsToLoad)
+            {
+                var resp =
+                    XDocument.Parse(
+                        WebClient.DownloadString(platforms.Contains(account.Key.Split(':')[0])
+                            ? $"http://realmofthemadgodhrd.appspot.com/char/list?guid={HttpUtility.UrlEncode(account.Key)}&secret={account.Value}"
+                            : $"http://realmofthemadgodhrd.appspot.com/char/list?guid={HttpUtility.UrlEncode(account.Key)}&password={account.Value}"),
+                        LoadOptions.None);
+                if (resp.HasElement("Error"))
                 {
-                    Console.WriteLine("Cant find accounts file.");
-                    Console.ReadLine();
-                    return;
-                }
-
-                AccountsToLoad =
-                    JsonConvert.DeserializeObject<Dictionary<string, string>>(
-                        File.ReadAllText("stuff/json/accounts.json"));
-                Accounts = new List<Account>();
-                WebClient = new WebClient();
-
-                var count = AccountsToLoad.Count;
-
-                foreach (var account in AccountsToLoad)
-                {
-                    var resp =
-                        XDocument.Parse(
-                            WebClient.DownloadString(platforms.Contains(account.Key.Split(':')[0])
-                                ? $"http://realmofthemadgodhrd.appspot.com/char/list?guid={HttpUtility.UrlEncode(account.Key)}&secret={account.Value}"
-                                : $"http://realmofthemadgodhrd.appspot.com/char/list?guid={HttpUtility.UrlEncode(account.Key)}&password={account.Value}"),
-                            LoadOptions.None);
-                    if (resp.HasElement("Error"))
+                    if (!LanguageLibrary.Names.ContainsKey(resp.Element("Error").Value))
                     {
-                        if (!LanguageLibrary.Names.ContainsKey(resp.Element("Error").Value))
-                        {
-                            Console.WriteLine($"{account.Key} => {resp.Element("Error").Value}");
-                            continue;
-                        }
-                        Console.WriteLine($"{account.Key} => {LanguageLibrary.Names[resp.Element("Error").Value]}");
+                        Console.WriteLine($"{account.Key} => {resp.Element("Error").Value}");
                         continue;
                     }
-                    if (resp.Element("Chars").Element("Account").Element("AccountId").Value == "-1")
-                    {
-                        Console.WriteLine($"{account.Key} => Not a valid account");
-                        continue;
-                    }
-                    Accounts.Add(new Account(resp.Element("Chars")));
+                    Console.WriteLine($"{account.Key} => {LanguageLibrary.Names[resp.Element("Error").Value]}");
+                    continue;
                 }
-
-                Console.WriteLine($"Loaded {Accounts.Count} out of {count} accounts");
-
+                if (resp.Element("Chars").Element("Account").Element("AccountId").Value == "-1")
+                {
+                    Console.WriteLine($"{account.Key} => Not a valid account");
+                    continue;
+                }
+                Accounts.Add(new Account(resp.Element("Chars")));
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+
+            Console.WriteLine($"Loaded {Accounts.Count} out of {count} accounts");
+
             Console.ReadLine();
         }
     }
