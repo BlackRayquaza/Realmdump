@@ -20,6 +20,7 @@ namespace RealmdumpCmd.library.xml
         public void Dispose()
         {
             ObjectLibrary.Dispose();
+            ClassLibrary.Dispose();
         }
     }
 }
