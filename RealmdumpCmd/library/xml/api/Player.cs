@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RealmdumpCmd.util;
 using System.Linq;
 using System.Xml.Linq;
-using RealmdumpCmd.util;
 
 namespace RealmdumpCmd.library.xml.api
 {

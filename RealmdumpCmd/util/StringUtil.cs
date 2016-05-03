@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace RealmdumpCmd.util
 {
@@ -8,7 +7,7 @@ namespace RealmdumpCmd.util
         public static int FromString(string x)
         {
             if (string.IsNullOrWhiteSpace(x))
-                throw new InvalidOperationException();
+                return -1; // removed exception because an error with gift chests
             x = x.Trim();
             return x.StartsWith("0x") ? int.Parse(x.Substring(2), NumberStyles.HexNumber) : int.Parse(x);
         }

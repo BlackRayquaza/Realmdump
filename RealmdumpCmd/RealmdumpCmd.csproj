@@ -48,6 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="rotmg\api\Account.cs" />
+    <Compile Include="rotmg\api\Character.cs" />
+    <Compile Include="rotmg\api\ClassStats.cs" />
+    <Compile Include="rotmg\api\Stats.cs" />
     <Compile Include="library\xml\api\BasicObject.cs" />
     <Compile Include="library\xml\api\Player.cs" />
     <Compile Include="library\xml\ClassLibrary.cs" />
@@ -61,6 +65,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="util\EnumerableUtil.cs" />
+    <Compile Include="util\FameUtil.cs" />
     <Compile Include="util\StringUtil.cs" />
     <Compile Include="util\XmlUtil.cs" />
   </ItemGroup>
@@ -81,6 +86,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
