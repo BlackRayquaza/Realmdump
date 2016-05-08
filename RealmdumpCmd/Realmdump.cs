@@ -87,76 +87,151 @@ namespace RealmdumpCmd
 
         private void showStats()
         {
-            #region Total Fame
+            var sb = new StringBuilder();
+            var iterations = 0;
 
-            #region Most Total Fame
+            #region Account
 
-            if (
-                Accounts.Count(
-                    x => x.Stats.TotalFame == Accounts.OrderByDescending(y => y.Stats.TotalFame).First().Stats.TotalFame) >
-                1)
+            var accountsCount = Accounts.Count;
+
+            var goldSum = Accounts.Sum(_ => _.Credits);
+            var goldAverage = (int)Accounts.Average(_ => _.Credits);
+            var accountsGold = Accounts.OrderByDescending(_ => _.Credits).ThenBy(_ => _.Name);
+            var goldMost = Accounts.Where(x => x.Credits == accountsGold.First().Credits).ToList();
+            var goldUseMost = goldMost.Count > 1;
+            var goldLeast = Accounts.Where(x => x.Credits == accountsGold.Last().Credits).ToList();
+            var goldUseLeast = goldLeast.Count > 1;
+
+            var fameSum = Accounts.Sum(_ => _.Stats.Fame);
+            var fameAverage = (int)Accounts.Average(_ => _.Stats.Fame);
+            var accountsFame = Accounts.OrderByDescending(_ => _.Stats.Fame).ThenBy(_ => _.Name);
+
+            var fortuneTokens = Accounts.All(_ => _.FortuneTokens > 0);
+            var tokensSum = Accounts.Sum(_ => _.FortuneTokens);
+            var tokensAverage = (int)Accounts.Average(_ => _.FortuneTokens);
+            var accountsTokens = Accounts.OrderByDescending(_ => _.FortuneTokens).ThenBy(_ => _.Name);
+
+            WriteLine($"Accounts: {accountsCount}");
+
+            WriteLine($"Combined Gold: {goldSum}");
+            WriteLine($"Average Gold: {goldAverage}");
+            sb.Clear().Append("Most Gold: ");
+            if (goldUseMost)
             {
-                var sb =
-                    new StringBuilder(
-                        $"Most Total Fame: {Accounts.OrderByDescending(_ => _.Stats.TotalFame).First().Stats.TotalFame} (");
-                var iterations = 0;
-                foreach (var acc in Accounts.Where(
-                    x =>
-                        x.Stats.TotalFame ==
-                        Accounts.OrderByDescending(y => y.Stats.TotalFame)
-                                .First()
-                                .Stats.TotalFame))
+                iterations = 0;
+                foreach (var acc in goldMost)
                 {
-                    if (iterations != 0)
-                        sb.Append(", ");
-                    sb.Append($"{acc.Name}");
+                    sb.Append(iterations == 0 ? $"{goldMost.First().Credits} (" : ", ");
+                    sb.Append(acc.Name);
                     iterations++;
                 }
                 sb.Append(")");
                 WriteLine(sb.ToString());
             }
             else
-                WriteLine(
-                    $"Most Total Fame: {Accounts.OrderByDescending(_ => _.Stats.TotalFame).First().Stats.TotalFame} ({Accounts.OrderByDescending(_ => _.Stats.TotalFame).First().Name})");
+                WriteLine(sb.Append($"{accountsGold.First().Credits} ({accountsGold.First().Name})"));
 
-            #endregion Most Total Fame
-
-            #region Least Total Fame
-
-            if (
-                Accounts.Count(
-                    x => x.Stats.TotalFame == Accounts.OrderBy(y => y.Stats.TotalFame).First().Stats.TotalFame) >
-                1)
+            sb.Clear().Append("Least Gold: ");
+            if (goldUseLeast)
             {
-                var sb =
-                    new StringBuilder(
-                        $"Least Total Fame: {Accounts.OrderBy(_ => _.Stats.TotalFame).First().Stats.TotalFame} (");
-                var iterations = 0;
-                foreach (var acc in Accounts.Where(
-                    x =>
-                        x.Stats.TotalFame ==
-                        Accounts.OrderBy(y => y.Stats.TotalFame)
-                                .First()
-                                .Stats.TotalFame))
+                iterations = 0;
+                foreach (var acc in goldLeast)
                 {
-                    if (iterations != 0)
-                        sb.Append(", ");
-                    sb.Append($"{acc.Name}");
+                    sb.Append(iterations == 0 ? $"{goldLeast.First().Credits} (" : ", ");
+                    sb.Append(acc.Name);
                     iterations++;
                 }
                 sb.Append(")");
                 WriteLine(sb.ToString());
             }
             else
-                WriteLine(
-                    $"Least Total Fame: {Accounts.OrderBy(_ => _.Stats.TotalFame).First().Stats.TotalFame} ({Accounts.OrderBy(_ => _.Stats.TotalFame).First().Name})");
+                WriteLine(sb.Append($"{accountsGold.Last().Credits} ({accountsGold.Last().Name})"));
 
-            #endregion Least Total Fame
+            WriteLine($"Combined Fame: {fameSum}");
+            WriteLine($"Average Fame: {fameAverage}");
+            WriteLine($"Most Fame: {accountsFame.First().Stats.Fame} ({accountsFame.First().Name})");
+            WriteLine($"Least Fame: {accountsFame.Last().Stats.Fame} ({accountsFame.Last().Name})");
 
-            WriteLine($"Combined Total Fame: {Accounts.Sum(_ => _.Stats.TotalFame)}");
-            WriteLine($"Average Total Fame: {(int)Accounts.Average(_ => _.Stats.TotalFame)}");
+            if (fortuneTokens)
+            {
+                WriteLine($"Combined Fortune Tokens: {tokensSum}");
+                WriteLine($"Average Fortune Tokens: {tokensAverage}");
+                WriteLine($"Most Fortune Tokens: {accountsTokens.First().FortuneTokens} ({accountsTokens.First().Name})");
+                WriteLine($"Least Fortune Tokens: {accountsTokens.Last().FortuneTokens} ({accountsTokens.Last().Name})");
+            }
 
-            #endregion Total Fame
+            #endregion Account
+
+            //#region Total Fame
+
+            //#region Most Total Fame
+
+            //if (
+            //    Accounts.Count(
+            //        x => x.Stats.TotalFame == Accounts.OrderByDescending(y => y.Stats.TotalFame).First().Stats.TotalFame) >
+            //    1)
+            //{
+            //    //var sb =
+            //    new StringBuilder(
+            //        $"Most Total Fame: {Accounts.OrderByDescending(_ => _.Stats.TotalFame).First().Stats.TotalFame} (");
+            //    iterations = 0;
+            //    foreach (var acc in Accounts.Where(
+            //        x =>
+            //            x.Stats.TotalFame ==
+            //            Accounts.OrderByDescending(y => y.Stats.TotalFame)
+            //                    .First()
+            //                    .Stats.TotalFame))
+            //    {
+            //        if (iterations != 0)
+            //            sb.Append(", ");
+            //        sb.Append($"{acc.Name}");
+            //        iterations++;
+            //    }
+            //    sb.Append(")");
+            //    WriteLine(sb.ToString());
+            //}
+            //else
+            //    WriteLine(
+            //        $"Most Total Fame: {Accounts.OrderByDescending(_ => _.Stats.TotalFame).First().Stats.TotalFame} ({Accounts.OrderByDescending(_ => _.Stats.TotalFame).First().Name})");
+
+            //#endregion Most Total Fame
+
+            //#region Least Total Fame
+
+            //if (
+            //    Accounts.Count(
+            //        x => x.Stats.TotalFame == Accounts.OrderBy(y => y.Stats.TotalFame).First().Stats.TotalFame) >
+            //    1)
+            //{
+            //    //var sb =
+            //    new StringBuilder(
+            //        $"Least Total Fame: {Accounts.OrderBy(_ => _.Stats.TotalFame).First().Stats.TotalFame} (");
+            //    iterations = 0;
+            //    foreach (var acc in Accounts.Where(
+            //        x =>
+            //            x.Stats.TotalFame ==
+            //            Accounts.OrderBy(y => y.Stats.TotalFame)
+            //                    .First()
+            //                    .Stats.TotalFame))
+            //    {
+            //        if (iterations != 0)
+            //            sb.Append(", ");
+            //        sb.Append($"{acc.Name}");
+            //        iterations++;
+            //    }
+            //    sb.Append(")");
+            //    WriteLine(sb.ToString());
+            //}
+            //else
+            //    WriteLine(
+            //        $"Least Total Fame: {Accounts.OrderBy(_ => _.Stats.TotalFame).First().Stats.TotalFame} ({Accounts.OrderBy(_ => _.Stats.TotalFame).First().Name})");
+
+            //#endregion Least Total Fame
+
+            //WriteLine($"Combined Total Fame: {Accounts.Sum(_ => _.Stats.TotalFame)}");
+            //WriteLine($"Average Total Fame: {(int)Accounts.Average(_ => _.Stats.TotalFame)}");
+
+            //#endregion Total Fame
 
             #region Stars
 
@@ -165,12 +240,15 @@ namespace RealmdumpCmd
 
             #endregion Stars
 
-            #region Characters
+            //#region Characters
 
-            WriteLine(
-                $"Most Character Expierence: {Accounts.OrderByDescending(_ => _.Characters.OrderByDescending(x => x.Experience).First().Experience).First().Characters.OrderByDescending(_ => _.Experience).First().Experience} ({Accounts.OrderByDescending(_ => _.Characters.OrderByDescending(x => x.Experience).First().Experience).First().Name})");
+            //WriteLine($"Total Characters: {Accounts.Sum(_ => _.Characters.Count)}");
+            //WriteLine($"Average Characters: {(int)Accounts.Average(_ => _.Characters.Count)}");
+            //WriteLine($"Most Characters: {Accounts.OrderByDescending(_ => _.Characters.Count).First().Characters.Count} ({Accounts.OrderByDescending(_ => _.Characters.Count).First().Name})");
+            //WriteLine(
+            //    $"Most Character Expierence: {Accounts.OrderByDescending(_ => _.Characters.OrderByDescending(x => x.Experience).First().Experience).First().Characters.OrderByDescending(_ => _.Experience).First().Experience} ({Accounts.OrderByDescending(_ => _.Characters.OrderByDescending(x => x.Experience).First().Experience).First().Name})");
 
-            #endregion Characters
+            //#endregion Characters
         }
     }
 }

@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using RealmdumpCmd.util;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using RealmdumpCmd.util;
 
 namespace RealmdumpCmd.rotmg.api
 {
     public class Vault
     {
-        public List<List<int>> Chests { get; set; } 
+        public List<List<int>> Chests { get; set; }
 
         public Vault(XElement elem)
         {
@@ -21,6 +21,6 @@ namespace RealmdumpCmd.rotmg.api
                 }
                 Chests.Add(new List<int>(xElement.Value.Split(',').Select(StringUtil.FromString).ToList()));
             }
-        } 
+        }
     }
 }

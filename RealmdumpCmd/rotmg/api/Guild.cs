@@ -1,5 +1,5 @@
-﻿using System.Xml.Linq;
-using RealmdumpCmd.util;
+﻿using RealmdumpCmd.util;
+using System.Xml.Linq;
 
 namespace RealmdumpCmd.rotmg.api
 {

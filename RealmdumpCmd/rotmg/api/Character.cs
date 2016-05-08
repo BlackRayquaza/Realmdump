@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using RealmdumpCmd.util;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using RealmdumpCmd.util;
 
 namespace RealmdumpCmd.rotmg.api
 {
@@ -12,7 +12,7 @@ namespace RealmdumpCmd.rotmg.api
         public byte Level { get; set; }
         public int Experience { get; set; }
         public int Fame { get; set; }
-        public List<int> Equipment { get; set; } 
+        public List<int> Equipment { get; set; }
         public ushort MaxHitPoints { get; set; }
         public ushort HitPoints { get; set; }
         public ushort MaxMagicPoints { get; set; }
