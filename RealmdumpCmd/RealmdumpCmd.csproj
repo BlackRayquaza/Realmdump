@@ -44,25 +44,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="library\json\Settings.cs" />
+    <Compile Include="library\Resources.cs" />
     <Compile Include="Realmdump.cs" />
-    <Compile Include="rotmg\api\Account.cs" />
-    <Compile Include="rotmg\api\Character.cs" />
-    <Compile Include="rotmg\api\ClassStats.cs" />
-    <Compile Include="rotmg\api\Guild.cs" />
-    <Compile Include="rotmg\api\Stats.cs" />
+    <None Include="resources\json\settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Compile Include="rotmg\api\account\Account.cs" />
+    <Compile Include="rotmg\api\character\Character.cs" />
+    <Compile Include="rotmg\api\account\ClassStats.cs" />
+    <Compile Include="rotmg\api\account\Guild.cs" />
+    <Compile Include="rotmg\api\character\pet\Ability.cs" />
+    <Compile Include="rotmg\api\character\pet\Pet.cs" />
+    <Compile Include="rotmg\api\account\Stats.cs" />
     <Compile Include="library\xml\api\BasicObject.cs" />
     <Compile Include="library\xml\api\Player.cs" />
     <Compile Include="library\xml\ClassLibrary.cs" />
     <Compile Include="library\xml\api\Item.cs" />
     <Compile Include="library\json\LanguageLibrary.cs" />
     <Compile Include="library\xml\ObjectLibrary.cs" />
-    <Compile Include="library\xml\XmlLibrary.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="resources\json\account.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="rotmg\api\Vault.cs" />
+    <Compile Include="rotmg\api\account\Vault.cs" />
     <Compile Include="util\EnumerableUtil.cs" />
     <Compile Include="util\FameUtil.cs" />
     <Compile Include="util\StringUtil.cs" />

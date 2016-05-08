@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace RealmdumpCmd.rotmg.api
+namespace RealmdumpCmd.rotmg.api.account
 {
     public class Stats
     {

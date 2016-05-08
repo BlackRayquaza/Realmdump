@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
-using RealmdumpCmd.library.xml;
-using RealmdumpCmd.rotmg.api;
+using RealmdumpCmd.library;
+using RealmdumpCmd.rotmg.api.account;
 using RealmdumpCmd.util;
 using System;
 using System.Collections.Generic;
@@ -16,8 +16,7 @@ namespace RealmdumpCmd
 {
     public class Realmdump
     {
-        private XmlLibrary XmlLibrary { get; }
-        private LanguageLibrary LanguageLibrary { get; }
+        public Resources Resources { get; set; }
         private Dictionary<string, string> accountsToLoad { get; set; }
         private List<Account> Accounts { get; }
 
@@ -25,17 +24,19 @@ namespace RealmdumpCmd
 
         public Realmdump()
         {
-            LanguageLibrary = new LanguageLibrary(File.ReadAllText("resources/json/strings.json"));
-            XmlLibrary = new XmlLibrary(LanguageLibrary);
+            Resources = new Resources("resources/json/strings.json", "resources/xml/equip.xml",
+                "resources/xml/players.xml", "resources/json/settings.json");
             Accounts = new List<Account>();
 
-            WriteLine($"Items: {XmlLibrary.ObjectLibrary.TypeToItem.Count}");
-            WriteLine($"Players: {XmlLibrary.ClassLibrary.TypeToPlayer.Count}");
-            WriteLine($"Language Strings: {LanguageLibrary.Names.Count}");
+            WriteLine($"Items: {Resources.Objects.TypeToItem.Count}");
+            WriteLine($"Players: {Resources.Classes.TypeToPlayer.Count}");
+            WriteLine($"Language Strings: {Resources.Language.Count}");
         }
 
         public void Start()
         {
+            if (Resources.Settings.GetValue<bool>("debug"))
+                WriteLine("debug!");
             checkAccountsFile("resources/json/accounts.json");
             accountsToLoad = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("resources/json/accounts.json"));
             setupAccounts();
@@ -66,20 +67,17 @@ namespace RealmdumpCmd
                         LoadOptions.None);
                 if (resp.HasElement("Error"))
                 {
-                    if (!LanguageLibrary.Names.ContainsKey(resp.Element("Error").Value))
-                    {
-                        WriteLine($"{account.Key} => {resp.Element("Error").Value}");
-                        continue;
-                    }
-                    WriteLine($"{account.Key} => {LanguageLibrary.Names[resp.Element("Error").Value]}");
+                    if (Resources.Settings.GetValue<bool>("displayAccError"))
+                        WriteLine($"{account.Key} => {Resources.Language[resp.Element("Error").Value]}");
                     continue;
                 }
                 if (resp.Element("Chars").Element("Account").Element("AccountId").Value == "-1")
                 {
-                    WriteLine($"{account.Key} => Not a valid account");
+                    if (Resources.Settings.GetValue<bool>("displayAccError"))
+                        WriteLine($"{account.Key} => Not a valid account");
                     continue;
                 }
-                Accounts.Add(new Account(resp.Element("Chars")));
+                Accounts.Add(new Account(resp.Element("Chars"), Resources.Language));
             }
             accountsToLoad.Clear();
             WriteLine($"Loaded {Accounts.Count} out of {count} accounts");
@@ -88,28 +86,58 @@ namespace RealmdumpCmd
         private void showStats()
         {
             var sb = new StringBuilder();
-            var iterations = 0;
+            int iterations;
 
-            #region Account
+            #region init
 
             var accountsCount = Accounts.Count;
 
             var goldSum = Accounts.Sum(_ => _.Credits);
             var goldAverage = (int)Accounts.Average(_ => _.Credits);
             var accountsGold = Accounts.OrderByDescending(_ => _.Credits).ThenBy(_ => _.Name);
-            var goldMost = Accounts.Where(x => x.Credits == accountsGold.First().Credits).ToList();
+            var goldMost =
+                Accounts.Where(x => x.Credits == accountsGold.First().Credits).OrderBy(_ => _.Name).ToList();
             var goldUseMost = goldMost.Count > 1;
-            var goldLeast = Accounts.Where(x => x.Credits == accountsGold.Last().Credits).ToList();
+            var goldLeast =
+                Accounts.Where(x => x.Credits == accountsGold.Last().Credits).OrderBy(_ => _.Name).ToList();
             var goldUseLeast = goldLeast.Count > 1;
 
             var fameSum = Accounts.Sum(_ => _.Stats.Fame);
             var fameAverage = (int)Accounts.Average(_ => _.Stats.Fame);
             var accountsFame = Accounts.OrderByDescending(_ => _.Stats.Fame).ThenBy(_ => _.Name);
+            var fameMost =
+                Accounts.Where(x => x.Stats.Fame == accountsFame.First().Stats.Fame)
+                        .OrderBy(_ => _.Name)
+                        .ToList();
+            var fameUseMost = fameMost.Count > 1;
+            var fameLeast =
+                Accounts.Where(x => x.Stats.Fame == accountsFame.Last().Stats.Fame)
+                        .OrderBy(_ => _.Name)
+                        .ToList();
+            var fameUseLeast = fameLeast.Count > 1;
 
             var fortuneTokens = Accounts.All(_ => _.FortuneTokens > 0);
             var tokensSum = Accounts.Sum(_ => _.FortuneTokens);
             var tokensAverage = (int)Accounts.Average(_ => _.FortuneTokens);
             var accountsTokens = Accounts.OrderByDescending(_ => _.FortuneTokens).ThenBy(_ => _.Name);
+
+            var totalFameSum = Accounts.Sum(_ => _.Stats.TotalFame);
+            var totalFameAverage = (int)Accounts.Average(_ => _.Stats.TotalFame);
+            var accountsTotalFame = Accounts.OrderByDescending(_ => _.Stats.TotalFame).ThenBy(_ => _.Name);
+            var totalFameMost =
+                Accounts.Where(x => x.Stats.TotalFame == accountsTotalFame.First().Stats.TotalFame)
+                        .OrderBy(_ => _.Name)
+                        .ToList();
+            var useTotalFameMost = totalFameMost.Count > 1;
+            var totalFameLeast =
+                Accounts.Where(x => x.Stats.TotalFame == accountsTotalFame.Last().Stats.TotalFame)
+                        .OrderBy(_ => _.Name)
+                        .ToList();
+            var useTotalFameLeast = totalFameLeast.Count > 1;
+
+            #endregion init
+
+            #region Account
 
             WriteLine($"Accounts: {accountsCount}");
 
@@ -125,8 +153,7 @@ namespace RealmdumpCmd
                     sb.Append(acc.Name);
                     iterations++;
                 }
-                sb.Append(")");
-                WriteLine(sb.ToString());
+                WriteLine(sb.Append(")").ToString());
             }
             else
                 WriteLine(sb.Append($"{accountsGold.First().Credits} ({accountsGold.First().Name})"));
@@ -141,16 +168,42 @@ namespace RealmdumpCmd
                     sb.Append(acc.Name);
                     iterations++;
                 }
-                sb.Append(")");
-                WriteLine(sb.ToString());
+                WriteLine(sb.Append(")").ToString());
             }
             else
                 WriteLine(sb.Append($"{accountsGold.Last().Credits} ({accountsGold.Last().Name})"));
 
             WriteLine($"Combined Fame: {fameSum}");
             WriteLine($"Average Fame: {fameAverage}");
-            WriteLine($"Most Fame: {accountsFame.First().Stats.Fame} ({accountsFame.First().Name})");
-            WriteLine($"Least Fame: {accountsFame.Last().Stats.Fame} ({accountsFame.Last().Name})");
+            sb.Clear().Append("Most Fame: ");
+            if (fameUseMost)
+            {
+                iterations = 0;
+                foreach (var acc in fameMost)
+                {
+                    sb.Append(iterations == 0 ? $"{fameMost.First().Stats.Fame} (" : ", ");
+                    sb.Append(acc.Name);
+                    iterations++;
+                }
+                WriteLine(sb.Append(")").ToString());
+            }
+            else
+                WriteLine(sb.Append($"{fameMost.Last().Credits} ({fameMost.Last().Name})"));
+
+            sb.Clear().Append("Least Fame: ");
+            if (fameUseLeast)
+            {
+                iterations = 0;
+                foreach (var acc in fameLeast)
+                {
+                    sb.Append(iterations == 0 ? $"{fameLeast.First().Stats.Fame} (" : ", ");
+                    sb.Append(acc.Name);
+                    iterations++;
+                }
+                WriteLine(sb.Append(")").ToString());
+            }
+            else
+                WriteLine(sb.Append($"{fameLeast.Last().Credits} ({fameLeast.Last().Name})"));
 
             if (fortuneTokens)
             {
@@ -162,41 +215,26 @@ namespace RealmdumpCmd
 
             #endregion Account
 
-            //#region Total Fame
+            #region Total Fame
 
-            //#region Most Total Fame
+            WriteLine($"Combined Total Fame: {totalFameSum}");
+            WriteLine($"Average Total Fame: {totalFameAverage}");
 
-            //if (
-            //    Accounts.Count(
-            //        x => x.Stats.TotalFame == Accounts.OrderByDescending(y => y.Stats.TotalFame).First().Stats.TotalFame) >
-            //    1)
-            //{
-            //    //var sb =
-            //    new StringBuilder(
-            //        $"Most Total Fame: {Accounts.OrderByDescending(_ => _.Stats.TotalFame).First().Stats.TotalFame} (");
-            //    iterations = 0;
-            //    foreach (var acc in Accounts.Where(
-            //        x =>
-            //            x.Stats.TotalFame ==
-            //            Accounts.OrderByDescending(y => y.Stats.TotalFame)
-            //                    .First()
-            //                    .Stats.TotalFame))
-            //    {
-            //        if (iterations != 0)
-            //            sb.Append(", ");
-            //        sb.Append($"{acc.Name}");
-            //        iterations++;
-            //    }
-            //    sb.Append(")");
-            //    WriteLine(sb.ToString());
-            //}
-            //else
-            //    WriteLine(
-            //        $"Most Total Fame: {Accounts.OrderByDescending(_ => _.Stats.TotalFame).First().Stats.TotalFame} ({Accounts.OrderByDescending(_ => _.Stats.TotalFame).First().Name})");
+            sb.Clear().Append("Most Total Fame: ");
+            if (useTotalFameMost)
+            {
+                iterations = 0;
+                foreach (var acc in totalFameMost)
+                {
+                    sb.Append(iterations == 0 ? $"{totalFameMost.First().Stats.TotalFame} (" : ", ");
+                    sb.Append(acc.Name);
+                    iterations++;
+                }
+                WriteLine(sb.Append(")").ToString());
+            }
+            WriteLine(sb.Append($"{totalFameMost.First().Stats.TotalFame} ({totalFameMost.First().Name})"));
 
-            //#endregion Most Total Fame
-
-            //#region Least Total Fame
+            #region Least Total Fame
 
             //if (
             //    Accounts.Count(
@@ -226,12 +264,9 @@ namespace RealmdumpCmd
             //    WriteLine(
             //        $"Least Total Fame: {Accounts.OrderBy(_ => _.Stats.TotalFame).First().Stats.TotalFame} ({Accounts.OrderBy(_ => _.Stats.TotalFame).First().Name})");
 
-            //#endregion Least Total Fame
+            #endregion Least Total Fame
 
-            //WriteLine($"Combined Total Fame: {Accounts.Sum(_ => _.Stats.TotalFame)}");
-            //WriteLine($"Average Total Fame: {(int)Accounts.Average(_ => _.Stats.TotalFame)}");
-
-            //#endregion Total Fame
+            #endregion Total Fame
 
             #region Stars
 
@@ -240,15 +275,15 @@ namespace RealmdumpCmd
 
             #endregion Stars
 
-            //#region Characters
+            #region Characters
 
-            //WriteLine($"Total Characters: {Accounts.Sum(_ => _.Characters.Count)}");
-            //WriteLine($"Average Characters: {(int)Accounts.Average(_ => _.Characters.Count)}");
+            WriteLine($"Total Characters: {Accounts.Sum(_ => _.Characters.Count)}");
+            WriteLine($"Average Characters: {(int)Accounts.Average(_ => _.Characters.Count)}");
             //WriteLine($"Most Characters: {Accounts.OrderByDescending(_ => _.Characters.Count).First().Characters.Count} ({Accounts.OrderByDescending(_ => _.Characters.Count).First().Name})");
             //WriteLine(
-            //    $"Most Character Expierence: {Accounts.OrderByDescending(_ => _.Characters.OrderByDescending(x => x.Experience).First().Experience).First().Characters.OrderByDescending(_ => _.Experience).First().Experience} ({Accounts.OrderByDescending(_ => _.Characters.OrderByDescending(x => x.Experience).First().Experience).First().Name})");
+            //    $"Most Character Experience: {Accounts.OrderByDescending(_ => _.Characters.OrderByDescending(x => x.Experience).First().Experience).First().Characters.OrderByDescending(_ => _.Experience).First().Experience} ({Accounts.OrderByDescending(_ => _.Characters.OrderByDescending(x => x.Experience).First().Experience).First().Name})");
 
-            //#endregion Characters
+            #endregion Characters
         }
     }
 }

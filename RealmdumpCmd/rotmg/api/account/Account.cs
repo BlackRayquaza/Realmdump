@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using RealmdumpCmd.library.xml;
+using RealmdumpCmd.rotmg.api.character;
 
-namespace RealmdumpCmd.rotmg.api
+namespace RealmdumpCmd.rotmg.api.account
 {
     public class Account
     {
@@ -28,12 +30,12 @@ namespace RealmdumpCmd.rotmg.api
         public Stats Stats { get; set; }
         public Guild Guild { get; set; }
 
-        public Account(XContainer elem)
+        public Account(XContainer elem, LanguageLibrary language)
         {
             Characters = new List<Character>();
             var acc = elem.Element("Account");
 
-            Characters.AddRange(elem.Elements("Char").Select(_ => new Character(_)));
+            Characters.AddRange(elem.Elements("Char").Select(_ => new Character(_, language)));
             Credits = acc.Value<int>("Credits");
             FortuneTokens = acc.Value<int>("FortuneToken");
             NextCharSlotPrice = acc.Value<int>("NextCharSlotPrice");

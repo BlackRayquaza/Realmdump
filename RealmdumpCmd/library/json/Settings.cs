@@ -1,21 +1,24 @@
 ﻿using Newtonsoft.Json;
+using RealmdumpCmd.util;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace RealmdumpCmd.library.xml
 {
-    public class LanguageLibrary : IDisposable
+    public class Settings : IDisposable
     {
         private Dictionary<string, string> values { get; }
 
-        public string this[string name] => values.ContainsKey(name) ? values[name] : name;
-
         public int Count => values.Count;
 
-        public LanguageLibrary(string json)
+        public Settings(string json)
         {
             values = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+        }
+
+        public T GetValue<T>(string key)
+        {
+            return values.ContainsKey(key) ? values[key].Convert<T>() : default(T);
         }
 
         public void Dispose()

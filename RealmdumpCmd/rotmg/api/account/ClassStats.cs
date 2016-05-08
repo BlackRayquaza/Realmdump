@@ -1,7 +1,7 @@
 ﻿using RealmdumpCmd.util;
 using System.Xml.Linq;
 
-namespace RealmdumpCmd.rotmg.api
+namespace RealmdumpCmd.rotmg.api.account
 {
     public class ClassStats
     {

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using RealmdumpCmd.library.xml;
+using RealmdumpCmd.rotmg.api.character.pet;
 
-namespace RealmdumpCmd.rotmg.api
+namespace RealmdumpCmd.rotmg.api.character
 {
     public class Character
     {
@@ -26,7 +28,7 @@ namespace RealmdumpCmd.rotmg.api
         public string PCStats { get; set; }
         public byte HealthStackCount { get; set; }
         public byte MagicStackCount { get; set; }
-        public XElement Pet { get; set; }
+        public Pet Pet { get; set; }
         public int Tex1 { get; set; }
         public int Tex2 { get; set; }
         public int Texture { get; set; }
@@ -36,7 +38,7 @@ namespace RealmdumpCmd.rotmg.api
         public int LTTimer { get; set; }
         public bool HasBackpack { get; set; }
 
-        public Character(XElement elem)
+        public Character(XElement elem, LanguageLibrary language)
         {
             Id = elem.Value<int>("@id");
             ObjectType = elem.Value<ushort>("ObjectType");
@@ -56,7 +58,7 @@ namespace RealmdumpCmd.rotmg.api
             PCStats = elem.Value<string>("PCStats");
             HealthStackCount = elem.Value<byte>("HealthStackCount");
             MagicStackCount = elem.Value<byte>("MagicStackCount");
-            Pet = elem.Element("Pet");
+            Pet = elem.HasElement("Pet") ? new Pet(elem.Element("Pet"), language) : null; 
             Tex1 = elem.HasElement("Tex1") ? elem.Value<int>("Tex1") : 0;
             Tex2 = elem.HasElement("Tex2") ? elem.Value<int>("Tex2") : 0;
             Texture = elem.HasElement("Texture") ? elem.Value<int>("Texture") : 0;

@@ -13,7 +13,7 @@ namespace RealmdumpCmd.library.xml.api
         {
             ObjectType = (ushort)StringUtil.FromString(element.Attribute("type").Value);
             ObjectId = element.Attribute("id").Value;
-            DisplayId = language.Names[element.Element("DisplayId").Value.Trim('{', '}')];
+            DisplayId = language[element.Element("DisplayId").Value.Trim('{', '}')];
         }
     }
 }
