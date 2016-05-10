@@ -18,7 +18,7 @@ namespace RealmdumpCmd.rotmg.api.character.pet
 
         public Pet(XElement elem, LanguageLibrary language)
         {
-            Name = language[elem.Value<string>("@name").Trim('{', '}')];
+            Name = language[elem.Value<string>("@name")];
             ObjectType = elem.Value<ushort>("@type");
             Id = elem.Value<ushort>("@instanceId");
             Rarity = elem.Value<byte>("@rarity");
@@ -27,10 +27,7 @@ namespace RealmdumpCmd.rotmg.api.character.pet
             Abilities = elem.Element("Abilities").Elements("Ability").Select(_ => new Ability(_)).ToList();
         }
 
-        public override string ToString()
-        {
-            return $"{Abilities[0].Power}/{Abilities[1].Power}/{Abilities[2].Power}";
-        }
+        public override string ToString() => $"{Abilities[0].Power}/{Abilities[1].Power}/{Abilities[2].Power}";
 
         public override bool Equals(object obj)
         {
@@ -44,9 +41,6 @@ namespace RealmdumpCmd.rotmg.api.character.pet
             return pet.Id == Id;
         }
 
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
+        public override int GetHashCode() => Id.GetHashCode();
     }
 }

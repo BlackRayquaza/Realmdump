@@ -38,7 +38,7 @@ namespace RealmdumpCmd.library.xml.api
         public Player(XElement element, LanguageLibrary language) : base(element, language)
         {
             Class = element.Element("Class").Value;
-            Description = language[element.Element("Description").Value.Trim('{', '}')];
+            Description = language[element.Element("Description").Value];
             Texture = element.Element("AnimatedTexture");
             HitSound = element.Element("HitSound").Value;
             DeathSound = element.Element("DeathSound").Value;

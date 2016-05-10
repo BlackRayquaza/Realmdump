@@ -56,7 +56,7 @@ namespace RealmdumpCmd.library.xml.api
             Texture = element.Element("Texture");
             SlotType = byte.Parse(element.Element("SlotType").Value);
             Tier = element.HasElement("Tier") ? byte.Parse(element.Element("Tier").Value) : byte.MinValue;
-            Description = language[element.Element("Description").Value.Trim('{', '}')];
+            Description = language[element.Element("Description").Value];
             RateOfFire = element.HasElement("RateOfFire") ? float.Parse(element.Element("RateOfFire").Value) : 0;
             Sound = element.HasElement("Sound") ? element.Element("Sound").Value : string.Empty;
             Projectile = element.HasElement("Projectile") ? element.Element("Projectile") : null;

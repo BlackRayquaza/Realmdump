@@ -35,8 +35,8 @@ namespace RealmdumpCmd
 
         public void Start()
         {
-            if (Resources.Settings.GetValue<bool>("debug"))
-                WriteLine("debug!");
+            if (Resources.Settings.GetValue<bool>("showSettingsOnStartup"))
+                showSettings();
             checkAccountsFile("resources/json/accounts.json");
             accountsToLoad = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText("resources/json/accounts.json"));
             setupAccounts();
@@ -67,13 +67,13 @@ namespace RealmdumpCmd
                         LoadOptions.None);
                 if (resp.HasElement("Error"))
                 {
-                    if (Resources.Settings.GetValue<bool>("displayAccError"))
+                    if (Resources.Settings.GetValue<bool>("displayAccErrors"))
                         WriteLine($"{account.Key} => {Resources.Language[resp.Element("Error").Value]}");
                     continue;
                 }
                 if (resp.Element("Chars").Element("Account").Element("AccountId").Value == "-1")
                 {
-                    if (Resources.Settings.GetValue<bool>("displayAccError"))
+                    if (Resources.Settings.GetValue<bool>("displayAccErrors"))
                         WriteLine($"{account.Key} => Not a valid account");
                     continue;
                 }
@@ -295,6 +295,13 @@ namespace RealmdumpCmd
                         .ToList();
 
             WriteLine($"Best Pet: {pets.First().Name} => {pets.First().Pets.First().Id} => {pets.First().Pets.First().ToString()}");
+        }
+
+        private void showSettings()
+        {
+            WriteLine("Settings");
+            foreach (var setting in Resources.Settings.Values)
+                WriteLine($"{setting.Key} => {setting.Value}");
         }
     }
 }

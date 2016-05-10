@@ -16,6 +16,8 @@ namespace RealmdumpCmd.library.xml
             values = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
         }
 
+        public Dictionary<string, string> Values => values; 
+
         public T GetValue<T>(string key)
         {
             return values.ContainsKey(key) ? values[key].Convert<T>() : default(T);

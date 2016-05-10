@@ -8,21 +8,21 @@ namespace RealmdumpCmd.library.xml
     {
         private Dictionary<string, string> strings { get; }
 
-        public string this[string name]
+        public string this[string key]
         {
             get
             {
-                name = name.Trim('{', '}');
-                return strings.ContainsKey(name) ? strings[name] : name;
+                key = key.Trim('{', '}');
+                return strings.ContainsKey(key) ? strings[key] : key;
             }
         }
-
-        public int Count => strings.Count;
 
         public LanguageLibrary(string json)
         {
             strings = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
         }
+
+        public int Count => strings.Count;
 
         public string GetValue(string key) => this[key];
 
