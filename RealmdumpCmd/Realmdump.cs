@@ -284,6 +284,17 @@ namespace RealmdumpCmd
             //    $"Most Character Experience: {Accounts.OrderByDescending(_ => _.Characters.OrderByDescending(x => x.Experience).First().Experience).First().Characters.OrderByDescending(_ => _.Experience).First().Experience} ({Accounts.OrderByDescending(_ => _.Characters.OrderByDescending(x => x.Experience).First().Experience).First().Name})");
 
             #endregion Characters
+
+            // testing
+
+            var pets =
+                Accounts.Where(_ => _.Pets.Any())
+                        .OrderByDescending(_ => _.Pets.First().Abilities[0].Power)
+                        .ThenByDescending(_ => _.Pets.First().Abilities[1].Power)
+                        .ThenByDescending(_ => _.Pets.First().Abilities[2].Power)
+                        .ToList();
+
+            WriteLine($"Best Pet: {pets.First().Name} => {pets.First().Pets.First().Id} => {pets.First().Pets.First().ToString()}");
         }
     }
 }

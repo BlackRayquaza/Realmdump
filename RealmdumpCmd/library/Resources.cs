@@ -25,6 +25,7 @@ namespace RealmdumpCmd.library
             Language.Dispose();
             Objects.Dispose();
             Classes.Dispose();
+            Settings.Dispose();
         }
     }
 }

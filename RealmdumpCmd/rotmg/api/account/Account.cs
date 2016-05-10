@@ -1,9 +1,10 @@
-﻿using RealmdumpCmd.util;
+﻿using RealmdumpCmd.library.xml;
+using RealmdumpCmd.rotmg.api.character;
+using RealmdumpCmd.rotmg.api.character.pet;
+using RealmdumpCmd.util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using RealmdumpCmd.library.xml;
-using RealmdumpCmd.rotmg.api.character;
 
 namespace RealmdumpCmd.rotmg.api.account
 {
@@ -29,6 +30,16 @@ namespace RealmdumpCmd.rotmg.api.account
         public byte ArenaTickets { get; set; } // what is this
         public Stats Stats { get; set; }
         public Guild Guild { get; set; }
+
+        public List<Pet> Pets
+            =>
+                Characters.Select(_ => _.Pet)
+                          .Distinct()
+                          .Where(_ => _ != null)
+                          .OrderByDescending(_ => _.Abilities[0].Power)
+                          .ThenByDescending(_ => _.Abilities[1].Power)
+                          .ThenByDescending(_ => _.Abilities[2].Power)
+                          .ToList();
 
         public Account(XContainer elem, LanguageLibrary language)
         {
