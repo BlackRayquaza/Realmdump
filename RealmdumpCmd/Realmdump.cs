@@ -295,6 +295,23 @@ namespace RealmdumpCmd
                         .ToList();
 
             WriteLine($"Best Pet: {pets.First().Name} => {pets.First().Pets.First().Id} => {pets.First().Pets.First().ToString()}");
+
+            WriteLine($"Total Shots: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.Shots))}");
+            WriteLine($"Total Shots That Damaged: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.ShotsThatDamage))}");
+            WriteLine($"Total Abilites Used: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.SpecialAbilityUses))}");
+            WriteLine($"Total Tiles Uncovered: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.TilesUncovered))}");
+            WriteLine($"Total Teleports: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.Teleports))}");
+            WriteLine($"Total Potions Drunk: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.PotionsDrunk))}");
+            WriteLine($"Total Monster Kills: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.MonsterKills))}");
+            WriteLine($"Total Monster Assists: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.MonsterAssists))}");
+            WriteLine($"Total God Kills: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.GodKills))}");
+            WriteLine($"Total God Assists: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.GodAssists))}");
+            WriteLine($"Total Cube Kills: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.CubeKills))}");
+            WriteLine($"Total Oryx Kills: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.OryxKills))}");
+            WriteLine($"Total Quests Completed: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.QuestsCompleted))}");
+            WriteLine($"Total Level Up Assists: {Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.LevelUpAssists))}");
+            var mins = Accounts.Sum(x => x.Characters.Sum(y => y.PCStats.MinutesActive));
+            WriteLine($"Total Minutes Active: {mins} ({mins/60} hours)");
         }
 
         private void showSettings()

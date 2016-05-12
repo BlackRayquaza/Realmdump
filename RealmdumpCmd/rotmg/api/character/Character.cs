@@ -25,7 +25,7 @@ namespace RealmdumpCmd.rotmg.api.character
         public byte Dexterity { get; set; }
         public byte HpRegen { get; set; }
         public byte MpRegen { get; set; }
-        public string PCStats { get; set; }
+        public FameStats PCStats { get; set; }
         public byte HealthStackCount { get; set; }
         public byte MagicStackCount { get; set; }
         public Pet Pet { get; set; }
@@ -55,7 +55,7 @@ namespace RealmdumpCmd.rotmg.api.character
             Dexterity = elem.Value<byte>("Dexterity");
             HpRegen = elem.Value<byte>("HpRegen");
             MpRegen = elem.Value<byte>("MpRegen");
-            PCStats = elem.Value<string>("PCStats");
+            PCStats = new FameStats(elem.Value<string>("PCStats"));
             HealthStackCount = elem.Value<byte>("HealthStackCount");
             MagicStackCount = elem.Value<byte>("MagicStackCount");
             Pet = elem.HasElement("Pet") ? new Pet(elem.Element("Pet"), language) : null; 

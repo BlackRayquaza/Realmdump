@@ -54,6 +54,7 @@
     <Compile Include="rotmg\api\character\Character.cs" />
     <Compile Include="rotmg\api\account\ClassStats.cs" />
     <Compile Include="rotmg\api\account\Guild.cs" />
+    <Compile Include="rotmg\api\character\FameStats.cs" />
     <Compile Include="rotmg\api\character\pet\Ability.cs" />
     <Compile Include="rotmg\api\character\pet\Pet.cs" />
     <Compile Include="rotmg\api\account\Stats.cs" />
